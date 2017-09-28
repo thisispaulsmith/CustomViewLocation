@@ -16,6 +16,7 @@ var target = "Default";
 var outputDirectory = "./output/";
 var solutionPath = "./NetSmith.AspNetCore.CustomViewLocation.sln";
 var testFolder = "./test";
+var configuration = "release";
 
 GitVersion gitVersionInfo;
 
@@ -64,8 +65,9 @@ Task("__Version")
 Task("__Build")
     .Does(() => 
 	{
-        MSBuild(solutionPath, new MSBuildSettings()
+        DotNetCoreBuild(solutionPath, new DotNetCoreBuildSettings
 		{
+			Configuration = configuration,
 			ArgumentCustomization = args => args.Append("/p:SemVer=" + gitVersionInfo.NuGetVersion)
 		});
     });
@@ -79,7 +81,7 @@ Task("__Test")
 		{
 			DotNetCoreTest(file.FullPath, new DotNetCoreTestSettings
 			{
-				
+				Configuration = configuration,
 			});
 		}
     });
@@ -96,6 +98,7 @@ Task("__Pack")
 	{
 		DotNetCorePack("./src/NetSmith.AspNetCore.CustomViewLocation/NetSmith.AspNetCore.CustomViewLocation.csproj", new DotNetCorePackSettings
         {
+			Configuration = configuration,
             OutputDirectory = outputDirectory,
             NoBuild = true,
 			ArgumentCustomization = args => args.Append("/p:SemVer=" + gitVersionInfo.NuGetVersion)
