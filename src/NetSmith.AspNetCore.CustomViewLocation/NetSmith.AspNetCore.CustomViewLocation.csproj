@@ -11,6 +11,7 @@
     <Description></Description>
     <RepositoryUrl>https://github.com/thisispaulsmith/CustomViewLocation</RepositoryUrl>
     <PackageTags />
+    <PackageId>CustomViewLocation</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
