@@ -101,7 +101,6 @@ Task("__Pack")
 			Configuration = configuration,
             OutputDirectory = outputDirectory,
             NoBuild = true,
-			IncludeSymbols = true,
 			ArgumentCustomization = args => args.Append("/p:SemVer=" + gitVersionInfo.NuGetVersion)
         });
     });
