@@ -127,7 +127,7 @@ Task("__Publish")
 			AppVeyor.UploadArtifact(file.FullPath);
 
 			// Push the package.
-			NuGetPush(package.PackagePath, new NuGetPushSettings {
+			NuGetPush(file.FullPath, new NuGetPushSettings {
 				ApiKey = apiKey,
 				Source = apiUrl
 			});
