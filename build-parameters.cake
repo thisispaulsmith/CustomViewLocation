@@ -5,6 +5,8 @@ public class BuildParameters
 	public string Target { get; private set; }
 	public string Configuration { get; private set; }
 	public bool IsLocalBuild { get; private set; }
+    public string GitUser { get; private set; }
+    public string GitPassword { get; private set;  }
 	public BuildVersion Version { get; private set; }
 
 	public bool ShouldPublish
@@ -41,7 +43,9 @@ public class BuildParameters
 		return new BuildParameters {
             Target = target,
             Configuration = context.Argument("configuration", "Release"),
-            IsLocalBuild = buildSystem.IsLocalBuild
+            IsLocalBuild = buildSystem.IsLocalBuild,
+            GitUser = context.EnvironmentVariable("GITHUB_USERNAME"),
+            GitPassword = context.EnvironmentVariable("GITHUB_PASSWORD")
 		};
 	}
 }

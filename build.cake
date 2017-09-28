@@ -1,4 +1,5 @@
 // Install addins
+#addin "Cake.Git"
 
 // Install tools
 #tool "nuget:?package=GitVersion.CommandLine"
@@ -120,6 +121,19 @@ Task("__Publish")
 		}
 	});
 
+Task("__Tag")
+	.WithCriteria(() => parameters.Version.IsProduction)
+    .Does(() =>
+    {
+        GitTag(".", parameters.Version.GitVersionInfo.NuGetVersion);
+        GitPushRef(".", parameters.GitUser, parameters.GitPassword, "origin", 
+			parameters.Version.GitVersionInfo.NuGetVersion); 
+    })
+	.OnError(exception =>
+	{
+    	Information("Tagging failed, but continuing with next Task...");
+	});
+
 //////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
@@ -130,7 +144,8 @@ Task("Default")
 	.IsDependentOn("__Build")
 	.IsDependentOn("__Test")
 	.IsDependentOn("__Pack")
-	.IsDependentOn("__Publish");
+	.IsDependentOn("__Publish")
+	.IsDependentOn("__Tag");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
