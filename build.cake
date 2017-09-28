@@ -101,6 +101,7 @@ Task("__Pack")
 			Configuration = configuration,
             OutputDirectory = outputDirectory,
             NoBuild = true,
+			IncludeSymbols = true,
 			ArgumentCustomization = args => args.Append("/p:SemVer=" + gitVersionInfo.NuGetVersion)
         });
     });
@@ -109,9 +110,27 @@ Task("__Publish")
 	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
     .Does(() => 
 	{
+		// Resolve the API key.
+		var apiKey = EnvironmentVariable("NUGET_API_KEY");
+	    if(string.IsNullOrEmpty(apiKey)) {
+	        throw new InvalidOperationException("Could not resolve NuGet API key.");
+	    }
+	
+	    // Resolve the API url.
+	    var apiUrl = EnvironmentVariable("NUGET_API_URL");
+	    if(string.IsNullOrEmpty(apiUrl)) {
+	        throw new InvalidOperationException("Could not resolve NuGet API url.");
+	    }
+
 		foreach (var file in GetFiles(outputDirectory + "**/*"))
 		{
 			AppVeyor.UploadArtifact(file.FullPath);
+
+			// Push the package.
+			NuGetPush(package.PackagePath, new NuGetPushSettings {
+				ApiKey = apiKey,
+				Source = apiUrl
+			});
 		}
 	});
 
