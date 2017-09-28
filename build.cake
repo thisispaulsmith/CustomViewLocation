@@ -125,9 +125,9 @@ Task("__Tag")
 	.WithCriteria(() => parameters.Version.IsProduction)
     .Does(() =>
     {
-        GitTag(".", parameters.Version.GitVersionInfo.NuGetVersion);
+        GitTag(".", parameters.Version.Milestone);
         GitPushRef(".", parameters.GitUser, parameters.GitPassword, "origin", 
-			parameters.Version.GitVersionInfo.NuGetVersion); 
+			parameters.Version.Milestone); 
     })
 	.OnError(exception =>
 	{

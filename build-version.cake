@@ -1,6 +1,7 @@
 public class BuildVersion
 {
     public GitVersion GitVersionInfo { get; private set; }
+    public string Milestone {get;private set;}
     public string CakeVersion { get; private set; }
 
     public static BuildVersion Calculate(ICakeContext context, BuildParameters parameters)
@@ -30,6 +31,7 @@ public class BuildVersion
         return new BuildVersion
         {
             GitVersionInfo = assertedVersions,
+            Milestone = string.Concat("v", assertedVersions.NuGetVersion),
             CakeVersion = cakeVersion
         };
     }
