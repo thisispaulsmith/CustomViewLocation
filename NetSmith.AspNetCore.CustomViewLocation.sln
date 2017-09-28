@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{14AF5C25-EA8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AF797C23-1D19-4BE3-9978-BF2F49AEA32D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communicator.AspNetCore.Mvc", "src\NetSmith.AspNetCore.CustomViewLocation\Communicator.AspNetCore.Mvc.csproj", "{2F5F3022-7852-4EF9-A0FC-2B80E4A91A38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetSmith.AspNetCore.CustomViewLocation", "src\NetSmith.AspNetCore.CustomViewLocation\NetSmith.AspNetCore.CustomViewLocation.csproj", "{2F5F3022-7852-4EF9-A0FC-2B80E4A91A38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
