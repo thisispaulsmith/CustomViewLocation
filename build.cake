@@ -5,20 +5,20 @@
 #tool "nuget:?package=OctopusTools"
 //#tool "nuget:?package=gitlink"
 
+// Load other scripts.
+#load "./build-parameters.cake";
+
 using Path = System.IO.Path;
-using System.Text.RegularExpressions;
 
 //////////////////////////////////////////////////////////////////////
 // PARAMETERS
 //////////////////////////////////////////////////////////////////////
 
-var target = "Default";
+BuildParameters parameters = BuildParameters.GetParameters(Context);
+
 var outputDirectory = "./output/";
 var solutionPath = "./NetSmith.AspNetCore.CustomViewLocation.sln";
 var testFolder = "./test";
-var configuration = "release";
-
-GitVersion gitVersionInfo;
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -26,7 +26,7 @@ GitVersion gitVersionInfo;
 
 Setup(context =>
 {
-	
+	parameters.Initialize(context);
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -49,26 +49,13 @@ Task("__Restore")
 	    DotNetCoreRestore();
 	});
 
-Task("__Version")
-    .Does(() => 
-	{
-	    // Update the build server
-		GitVersion(new GitVersionSettings{
-			OutputType = GitVersionOutput.BuildServer
-		});
-	
-		gitVersionInfo = GitVersion(new GitVersionSettings {
-			OutputType = GitVersionOutput.Json
-		});
-	});
-
 Task("__Build")
     .Does(() => 
 	{
         DotNetCoreBuild(solutionPath, new DotNetCoreBuildSettings
 		{
-			Configuration = configuration,
-			ArgumentCustomization = args => args.Append("/p:SemVer=" + gitVersionInfo.NuGetVersion)
+			Configuration = parameters.Configuration,
+			ArgumentCustomization = args => args.Append("/p:SemVer=" + parameters.Version.GitVersionInfo.NuGetVersion)
 		});
     });
 
@@ -81,7 +68,7 @@ Task("__Test")
 		{
 			DotNetCoreTest(file.FullPath, new DotNetCoreTestSettings
 			{
-				Configuration = configuration,
+				Configuration = parameters.Configuration,
 			});
 		}
     });
@@ -98,15 +85,15 @@ Task("__Pack")
 	{
 		DotNetCorePack("./src/NetSmith.AspNetCore.CustomViewLocation/NetSmith.AspNetCore.CustomViewLocation.csproj", new DotNetCorePackSettings
         {
-			Configuration = configuration,
+			Configuration = parameters.Configuration,
             OutputDirectory = outputDirectory,
             NoBuild = true,
-			ArgumentCustomization = args => args.Append("/p:SemVer=" + gitVersionInfo.NuGetVersion)
+			ArgumentCustomization = args => args.Append("/p:SemVer=" + parameters.Version.GitVersionInfo.NuGetVersion)
         });
     });
 
 Task("__Publish")
-	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+	.WithCriteria(() => parameters.ShouldPublish)
     .Does(() => 
 	{
 		// Resolve the API key.
@@ -139,7 +126,6 @@ Task("__Publish")
 
 Task("Default")
 	.IsDependentOn("__Clean")
-	.IsDependentOn("__Version")
 	.IsDependentOn("__Restore")
 	.IsDependentOn("__Build")
 	.IsDependentOn("__Test")
@@ -150,4 +136,4 @@ Task("Default")
 // EXECUTION
 //////////////////////////////////////////////////////////////////////
 
-RunTarget(target);
+RunTarget(parameters.Target);
