@@ -156,8 +156,8 @@ private void PublishPackages(string url, string key)
 
 		// Push the package.
 		NuGetPush(file.FullPath, new NuGetPushSettings {
-			ApiKey = url,
-			Source = key
+			ApiKey = key,
+			Source = url
 		});
 	}
 }
