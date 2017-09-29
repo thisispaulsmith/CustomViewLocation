@@ -129,7 +129,11 @@ Task("__Publish")
 	    }
 
 		PublishPackages(apiUrl, apiKey);
-	});
+	})
+	.OnError(exception =>
+	{
+    	Information("Publish to NuGet failed, but continuing with next Task...");
+	});;
 
 Task("__Tag")
 	.WithCriteria(() => parameters.Version.IsProduction)
