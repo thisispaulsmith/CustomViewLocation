@@ -13,7 +13,7 @@ public class BuildParameters
     {
         get
         {
-            return !IsLocalBuild && Version.IsProduction && Version.IsBeta;
+            return !IsLocalBuild && (Version.IsProduction || Version.IsBeta);
         }
     }
 
@@ -21,7 +21,7 @@ public class BuildParameters
     {
         get
         {
-            return !IsLocalBuild && Version.IsProduction && Version.IsBeta && Version.IsDevelopment;
+            return !IsLocalBuild && (Version.IsProduction || Version.IsBeta || Version.IsDevelopment);
         }
     }
 
