@@ -8,10 +8,11 @@
     <Authors>Paul Smith</Authors>
     <Company></Company>
     <Product>NetSmith.AspNetCore.CustomViewLocation</Product>
-    <Description></Description>
+    <Description>Feature view location for ASP.NET Core</Description>
     <RepositoryUrl>https://github.com/thisispaulsmith/CustomViewLocation</RepositoryUrl>
-    <PackageTags />
+    <PackageTags>aspnetcore, mvc</PackageTags>
     <PackageId>CustomViewLocation</PackageId>
+    <Copyright>© Paul Smith</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
