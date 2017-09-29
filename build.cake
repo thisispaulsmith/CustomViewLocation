@@ -93,6 +93,25 @@ Task("__Pack")
         });
     });
 
+Task("__PublishMyGet")
+	.WithCriteria(() => parameters.ShouldPublishToMyGet)
+    .Does(() => 
+	{
+		// Resolve the API key.
+		var apiKey = EnvironmentVariable("MYGET_API_KEY");
+	    if(string.IsNullOrEmpty(apiKey)) {
+	        throw new InvalidOperationException("Could not resolve MyGet API key.");
+	    }
+	
+	    // Resolve the API url.
+	    var apiUrl = EnvironmentVariable("MYGET_API_URL");
+	    if(string.IsNullOrEmpty(apiUrl)) {
+	        throw new InvalidOperationException("Could not resolve MyGet API url.");
+	    }
+
+		PublishPackages(apiUrl, apiKey);
+	});
+
 Task("__Publish")
 	.WithCriteria(() => parameters.ShouldPublish)
     .Does(() => 
@@ -109,16 +128,7 @@ Task("__Publish")
 	        throw new InvalidOperationException("Could not resolve NuGet API url.");
 	    }
 
-		foreach (var file in GetFiles(outputDirectory + "**/*"))
-		{
-			AppVeyor.UploadArtifact(file.FullPath);
-
-			// Push the package.
-			NuGetPush(file.FullPath, new NuGetPushSettings {
-				ApiKey = apiKey,
-				Source = apiUrl
-			});
-		}
+		PublishPackages(apiUrl, apiKey);
 	});
 
 Task("__Tag")
@@ -135,6 +145,24 @@ Task("__Tag")
 	});
 
 //////////////////////////////////////////////////////////////////////
+// HELPER
+//////////////////////////////////////////////////////////////////////
+
+private void PublishPackages(string url, string key)
+{
+	foreach (var file in GetFiles(outputDirectory + "**/*"))
+	{
+		AppVeyor.UploadArtifact(file.FullPath);
+
+		// Push the package.
+		NuGetPush(file.FullPath, new NuGetPushSettings {
+			ApiKey = url,
+			Source = key
+		});
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
 
@@ -144,6 +172,7 @@ Task("Default")
 	.IsDependentOn("__Build")
 	.IsDependentOn("__Test")
 	.IsDependentOn("__Pack")
+	.IsDependentOn("__PublishMyGet")
 	.IsDependentOn("__Publish")
 	.IsDependentOn("__Tag");
 
