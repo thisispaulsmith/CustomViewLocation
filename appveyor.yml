@@ -22,5 +22,4 @@ branches:
 
 # Build cache
 cache:
-- tools -> build.cake
-- packages -> build.cake
+- tools -> *.cake
