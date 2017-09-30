@@ -11,6 +11,8 @@ Currently defines `~/Features` and `~/Features/_Shared` as view locations.
 Update Startup.cs
 
 ```csharp
+using NetSmith.AspNetCore.CustomViewLocation;
+
 public class Startup
 {
     // ...
