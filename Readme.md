@@ -6,6 +6,14 @@ Simple extension to simplify custom view location in ASP.NET Core MVC.
 
 Currently defines `~/Features` and `~/Features/_Shared` as view locations.
 
+## Installation
+
+Install from NuGet
+
+```
+PM> Install-Package CustomViewLocation
+```
+
 ## Usage
 
 Update Startup.cs
