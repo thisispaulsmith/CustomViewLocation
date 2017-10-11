@@ -112,6 +112,25 @@ Task("__PublishMyGet")
 		PublishPackages(apiUrl, apiKey);
 	});
 
+Task("__PublishMyGet")
+	.WithCriteria(() => parameters.ShouldPublishToMyGet)
+    .Does(() => 
+	{
+		// Resolve the API key.
+		var apiKey = EnvironmentVariable("MYGET_API_KEY");
+	    if(string.IsNullOrEmpty(apiKey)) {
+	        throw new InvalidOperationException("Could not resolve MyGet API key.");
+	    }
+	
+	    // Resolve the API url.
+	    var apiUrl = EnvironmentVariable("MYGET_API_URL");
+	    if(string.IsNullOrEmpty(apiUrl)) {
+	        throw new InvalidOperationException("Could not resolve MyGet API url.");
+	    }
+
+		PublishPackages(apiUrl, apiKey);
+	});
+
 Task("__Publish")
 	.WithCriteria(() => parameters.ShouldPublish)
     .Does(() => 
@@ -129,14 +148,19 @@ Task("__Publish")
 	    }
 
 		PublishPackages(apiUrl, apiKey);
-	});
+	})
+	.OnError(exception =>
+	{
+    	Information("Publish to NuGet failed, but continuing with next Task...");
+	});;
 
 Task("__Tag")
 	.WithCriteria(() => parameters.Version.IsProduction)
     .Does(() =>
     {
+		Information($"Tagging with milestone {parameters.Version.Milestone}");
         GitTag(".", parameters.Version.Milestone);
-        GitPushRef(".", parameters.GitUser, parameters.GitPassword, "origin", 
+        GitPushRef(".", parameters.GitUser, "", "origin", 
 			parameters.Version.Milestone); 
     })
 	.OnError(exception =>

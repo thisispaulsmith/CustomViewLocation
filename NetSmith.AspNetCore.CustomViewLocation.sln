@@ -5,9 +5,11 @@ VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC3EC6C5-BDFD-4D37-9883-EA40E0913ACB}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		build-parameters.cake = build-parameters.cake
 		build-version.cake = build-version.cake
 		build.cake = build.cake
+		GitVersion.yml = GitVersion.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{14AF5C25-EA88-4662-ACF3-8AF2C4BB036C}"
