@@ -133,14 +133,15 @@ Task("__Publish")
 	.OnError(exception =>
 	{
     	Information("Publish to NuGet failed, but continuing with next Task...");
-	});;
+	});
 
 Task("__Tag")
 	.WithCriteria(() => parameters.Version.IsProduction)
     .Does(() =>
     {
+		Information($"Tagging with milestone {parameters.Version.Milestone}");
         GitTag(".", parameters.Version.Milestone);
-        GitPushRef(".", parameters.GitUser, parameters.GitPassword, "origin", 
+        GitPushRef(".", parameters.GitUser, "", "origin", 
 			parameters.Version.Milestone); 
     })
 	.OnError(exception =>
